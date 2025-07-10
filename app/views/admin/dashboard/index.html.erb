@@ -1,0 +1,51 @@
+<h1>Admin Dashboard</h1>
+
+<p><strong>Total Users:</strong> <%= @user_count %></p>
+
+<h2>Role Breakdown</h2>
+<ul>
+  <% @role_breakdown.each do |role, count| %>
+    <li><%= role.capitalize %>: <%= count %></li>
+  <% end %>
+</ul>
+
+<h2>Age Group Breakdown</h2>
+<ul>
+  <% @age_group_breakdown.each do |age_group, count| %>
+    <li><%= age_group %>: <%= count %></li>
+  <% end %>
+</ul>
+
+<h2>Space/Group by Age Group</h2>
+<ul>
+  <% @space_type_breakdown.each do |age_group, count| %>
+    <li><%= age_group %>: <%= count %></li>
+  <% end %>
+</ul>
+
+<h2>Active vs Inactive Users (last 30 days)</h2>
+<ul>
+  <li>Active Users: <%= @active_users_count %></li>
+  <li>Inactive Users: <%= @inactive_users_count %></li>
+</ul>
+
+<h2>Parental Consents</h2>
+<ul>
+  <li>Pending: <%= @pending_consents %></li>
+  <li>Accepted: <%= @accepted_consents %></li>
+  <li>Rejected: <%= @rejected_consents %></li>
+</ul>
+
+<h2>Age Group Breakdown</h2>
+<ul>
+  <% @age_group_breakdown.each do |age_group, count| %>
+    <li><%= age_group %>: <%= count %></li>
+  <% end %>
+</ul>
+
+<h2>Spaces by Age Group</h2>
+<ul>
+  <% @space_type_breakdown.each do |age_group, count| %>
+    <li><%= age_group %>: <%= count %></li>
+  <% end %>
+</ul>
