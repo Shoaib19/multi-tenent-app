@@ -1,0 +1,28 @@
+<h1>Manage Spaces</h1>
+
+<p><%= link_to "Create New Space", new_admin_space_path %></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Description</th>
+      <th>Required Age Group</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @spaces.each do |space| %>
+      <tr>
+        <td><%= space.name %></td>
+        <td><%= space.description %></td>
+        <td><%= space.required_age_group&.name || "None" %></td>
+        <td>
+          <%= link_to "Edit", edit_admin_space_path(space) %> |
+          <%= button_to "Delete", admin_space_path(space), method: :delete, data: { confirm: "Are you sure?" } %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+

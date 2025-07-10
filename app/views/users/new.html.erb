@@ -1,0 +1,34 @@
+<h1>Sign Up</h1>
+
+<%= form_with model: @user, url: signup_path, local: true do |f| %>
+  <div>
+    <%= f.label :email %><br>
+    <%= f.email_field :email %>
+  </div>
+
+  <div>
+    <%= f.label :password %><br>
+    <%= f.password_field :password %>
+  </div>
+
+  <div>
+    <%= f.label :password_confirmation %><br>
+    <%= f.password_field :password_confirmation %>
+  </div>
+
+  <div>
+    <%= f.label :date_of_birth %><br>
+    <%= f.date_field :date_of_birth %>
+  </div>
+
+  <div>
+    <%= f.label :organization_id, "Organization ID" %><br>
+    <%= f.number_field :organization_id %>
+  </div>
+
+  <div>
+    <%= f.submit "Sign Up" %>
+  </div>
+<% end %>
+
+<%= link_to "Login", login_path %>

@@ -1,0 +1,24 @@
+<h1>Edit Space</h1>
+
+<%= form_with model: [:admin, @space], local: true do |f| %>
+  <div>
+    <%= f.label :name %><br>
+    <%= f.text_field :name %>
+  </div>
+
+  <div>
+    <%= f.label :description %><br>
+    <%= f.text_area :description %>
+  </div>
+
+  <div>
+    <%= f.label :required_age_group_id, "Required Age Group" %><br>
+    <%= f.collection_select :required_age_group_id, AgeGroup.all, :id, :name, include_blank: true %>
+  </div>
+
+  <div>
+    <%= f.submit "Update Space" %>
+  </div>
+<% end %>
+
+<%= link_to "Back to Spaces", admin_spaces_path %>
