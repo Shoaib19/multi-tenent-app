@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  skip_before_action :require_login, only: [:new, :create]
+  skip_before_action :require_login, only: [ :new, :create ]
   skip_before_action :set_current_tenant
 
   def new
@@ -23,13 +23,12 @@ class UsersController < ApplicationController
       @user.age_group = age_group
     end
 
-    if age && age < 13
-      @user.parental_consent_status = 'pending'
-    else
-      @user.parental_consent_status = 'accepted'
-    end
-
     if @user.save
+      if @user.requires_parental_consent?
+        ParentalConsent.create!(user: @user, status: "pending")
+      end
+
+      @user.update(is_active: true) if @user.age_group.name == "Adult"
       session[:user_id] = @user.id
       ActsAsTenant.current_tenant = @user.organization
       redirect_to dashboard_path, notice: "Welcome!"

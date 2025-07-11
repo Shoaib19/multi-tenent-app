@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_07_10_072523) do
+ActiveRecord::Schema[8.0].define(version: 2025_07_11_073455) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
@@ -44,10 +44,14 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_10_072523) do
 
   create_table "parental_consents", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "user_id", null: false
-    t.string "status", default: "pending"
+    t.integer "status"
     t.datetime "responded_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "parent_email"
+    t.string "consent_type"
+    t.uuid "space_id"
+    t.index ["space_id"], name: "index_parental_consents_on_space_id"
     t.index ["user_id"], name: "index_parental_consents_on_user_id"
   end
 
@@ -69,9 +73,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_10_072523) do
     t.date "date_of_birth"
     t.uuid "organization_id", null: false
     t.uuid "age_group_id"
-    t.integer "role"
-    t.string "parental_consent_status", default: "pending"
+    t.integer "role", default: 0, null: false
     t.string "password_digest"
+    t.boolean "is_active", default: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["age_group_id"], name: "index_users_on_age_group_id"
@@ -81,6 +85,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_10_072523) do
 
   add_foreign_key "memberships", "spaces"
   add_foreign_key "memberships", "users"
+  add_foreign_key "parental_consents", "spaces"
   add_foreign_key "parental_consents", "users"
   add_foreign_key "spaces", "age_groups", column: "required_age_group_id"
   add_foreign_key "spaces", "organizations"

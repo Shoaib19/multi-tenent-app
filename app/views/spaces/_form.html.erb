@@ -1,0 +1,20 @@
+<%= form_with model: @space, local: true do |f| %>
+<div>
+  <%= f.label :name %>
+  <%= f.text_field :name %>
+</div>
+
+<div>
+  <%= f.label :description %>
+  <%= f.text_area :description %>
+</div>
+
+<div>
+  <%= f.label :required_age_group_id, "Required Age Group" %>
+  <%= f.collection_select :required_age_group_id, AgeGroup.all, :id, :name, prompt: "Any" %>
+</div>
+
+<div>
+  <%= f.submit %>
+</div>
+<% end %>

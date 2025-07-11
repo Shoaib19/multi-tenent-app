@@ -42,6 +42,7 @@ User.create!(
   password: "password",
   password_confirmation: "password",
   role: 2,
+  is_active: true,
   age_group: adult_group,
   organization: org1,
   date_of_birth: 30.years.ago
@@ -52,6 +53,7 @@ User.create!(
   password: "password",
   password_confirmation: "password",
   role: 2,
+  is_active: true,
   age_group: adult_group,
   organization: org2,
   date_of_birth: 35.years.ago
