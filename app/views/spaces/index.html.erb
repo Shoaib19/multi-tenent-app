@@ -1,10 +1,12 @@
-<h1>All Spaces</h1>
+<h1 class="all-spaces-title">All Spaces</h1>
 
-<% if current_user.is_active? %>
-<%= link_to "New Space", new_space_path %>
+<% if policy(Space).new? %>
+<div class="all-spaces-new-button">
+  <%= link_to "New Space", new_space_path, class: "all-spaces-create-link" %>
+</div>
 <% end %>
 
-<table>
+<table class="all-spaces-table">
   <tr>
     <th>Name</th>
     <th>Description</th>
@@ -19,16 +21,15 @@
     <td><%= space.required_age_group&.name %></td>
     <td><%= space.creator.email %></td>
     <td>
-      <%= link_to "Show", space_path(space) %>
+      <%= link_to "Show", space_path(space), class: "all-spaces-action-link" %>
       <% if space.creator == current_user %>
-      | <%= link_to "Edit", edit_space_path(space) %>
-      | <%= link_to "Delete", space_path(space), method: :delete, data: { confirm: "Are you sure?" } %>
+      | <%= link_to "Edit", edit_space_path(space), class: "all-spaces-action-link" %>
+      | <%= button_to "Delete", space_path(space), method: :delete, data: { confirm: "Are you sure?" }, class: "all-spaces-button" %>
       <% end %>
-      |
       <% unless current_user.joined_spaces.include?(space) %>
-      | <%= button_to "Join", join_space_path(space), method: :post %>
+      | <%= button_to "Join", join_space_path(space), method: :post, class: "all-spaces-join-button" %>
       <% else %>
-      | Joined
+      | <span class="all-spaces-joined">Joined</span>
       <% end %>
     </td>
   </tr>

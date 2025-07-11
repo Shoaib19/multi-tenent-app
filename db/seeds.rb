@@ -1,14 +1,4 @@
-# This file should ensure the existence of records required to run the application in every environment (production,
-# development, test). The code here should be idempotent so that it can be executed at any point in every environment.
-# The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
-#
-# Example:
-#
-#   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
-#     MovieGenre.find_or_create_by!(name: genre_name)
-#   end
-
-
+#puts "🌱 Seeding..."
 
 # Clear existing
 Organization.destroy_all
@@ -34,11 +24,11 @@ org2 = Organization.create!(name: "Beta Org", description: "Org with Groups", or
     participation_rules: {}
   })
 
-puts "Organizations created."
+puts "✅ Organizations created"
 
 # Create Admin Users
-User.create!(
-  email: "admin1@alpha.org",
+admin1 = User.create!(
+  email: "admin@alpha.org",
   password: "password",
   password_confirmation: "password",
   role: 2,
@@ -48,8 +38,8 @@ User.create!(
   date_of_birth: 30.years.ago
 )
 
-User.create!(
-  email: "admin2@beta.org",
+admin2 = User.create!(
+  email: "admin@beta.org",
   password: "password",
   password_confirmation: "password",
   role: 2,
@@ -60,3 +50,81 @@ User.create!(
 )
 
 puts "Admin users created."
+
+# Helper to create user with age group
+def create_user(email, role, dob, org, age_group, active: true)
+  user = User.find_or_initialize_by(email: email)
+  user.password = "password"
+  user.password_confirmation = "password"
+  user.date_of_birth = dob
+  user.role = role
+  user.organization = org
+  user.is_active = active
+  user.save!
+  user.age_group = age_group
+  user
+end
+
+puts "✅ Admins created"
+
+# Moderators
+mod1 = create_user("mod1@alpha.com", :moderator, 28.years.ago.to_date, org1, adult_group)
+mod2 = create_user("mod2@beta.com", :moderator, 32.years.ago.to_date, org2, adult_group)
+
+puts "✅ Moderators created"
+
+# Adults
+2.times do |i|
+  create_user("adult#{i+1}@alpha.com", :default_user, 27.years.ago.to_date, org1, adult_group)
+  create_user("adult#{i+1}@beta.com", :default_user, 29.years.ago.to_date, org2, adult_group)
+end
+
+# Teens
+2.times do |i|
+  create_user("teen#{i+1}@alpha.com", :default_user, 16.years.ago.to_date, org1, teen_group)
+  create_user("teen#{i+1}@beta.com", :default_user, 17.years.ago.to_date, org2, teen_group)
+end
+
+# Children
+2.times do |i|
+  create_user("child#{i+1}@alpha.com", :default_user, 10.years.ago.to_date, org1, kids_group)
+  create_user("child#{i+1}@beta.com", :default_user, 12.years.ago.to_date, org2, kids_group)
+end
+
+puts "✅ Users by age groups created"
+
+# Spaces for Alpha Org
+[
+  { name: "Alpha Adult Space", desc: "For adults only", age_group: adult_group, creator: admin1 },
+  { name: "Alpha Teen Space", desc: "For teens", age_group: teen_group, creator: mod1 },
+  { name: "Alpha Kids Space", desc: "For children", age_group: kids_group, creator: mod1 }
+].each do |s|
+  Space.find_or_create_by!(
+    name: s[:name],
+    organization: org1
+  ) do |space|
+    space.description = s[:desc]
+    space.required_age_group = s[:age_group]
+    space.creator = s[:creator]
+  end
+end
+
+# Spaces for Beta Org
+[
+  { name: "Beta Adult Lounge", desc: "Adults discuss here", age_group: adult_group, creator: admin2 },
+  { name: "Beta Teen Club", desc: "For our teens", age_group: teen_group, creator: mod2 },
+  { name: "Beta Kids Corner", desc: "Play and learn", age_group: kids_group, creator: mod2 }
+].each do |s|
+  Space.find_or_create_by!(
+    name: s[:name],
+    organization: org2
+  ) do |space|
+    space.description = s[:desc]
+    space.required_age_group = s[:age_group]
+    space.creator = s[:creator]
+  end
+end
+
+puts "✅ Spaces created"
+
+puts "🌱 Seeding complete!"

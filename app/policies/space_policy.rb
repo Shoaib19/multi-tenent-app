@@ -8,11 +8,15 @@ class SpacePolicy < ApplicationPolicy
   end
 
   def create?
-    user.is_active?
+    user.is_active? && (user.role == 'admin' || user.role == 'moderator')
   end
 
   def new?
-    user.is_active?
+    create?
+  end
+
+  def edit?
+    user.is_active? && (user.role == 'admin' || record.creator == user)
   end
 
   def update?

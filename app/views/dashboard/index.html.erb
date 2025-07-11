@@ -1,6 +1,4 @@
-<h1>Welcome to your Dashboard</h1>
-<p>Hello, <%= current_user.email %>!</p>
-<p>Organization: <%= current_user.organization.name %></p>
+<h1 class="dashboard-title">Welcome to your <%= current_user.organization.name %></h1>
 
 <% if current_user&.needs_parental_consent_popup? %>
 <%= render 'shared/parental_consent_popup', consent_type: 0 %>
@@ -9,13 +7,12 @@
 <% current_user.parental_consents.pending.space_join.each do |consent| %>
 <%= render "shared/parental_consent_popup", consent_type: 1, space_id: consent.space_id %>
 <% end %>
-<h2>All Spaces in Your Organization</h2>
 
-
+<h2 class="dashboard-section-title">All Spaces in Your Organization</h2>
 
 <% if current_user.is_active? %>
 <% if @spaces.any? %>
-<table>
+<table class="dashboard-spaces-table">
   <tr>
     <th>Name</th>
     <th>Description</th>
@@ -29,24 +26,24 @@
     <td><%= space.description %></td>
     <td><%= space.required_age_group&.name || "None" %></td>
     <td><%= space.creator.email %></td>
-    <td>
-      <%= link_to "View", space_path(space) %>
+    <td class="dashboard-space-actions">
+      <%= link_to "View", space_path(space), class: "dashboard-link" %>
       <% if space.creator == current_user %>
-      | <%= link_to "Edit", edit_space_path(space) %>
-      | <%= button_to "Delete", space_path(space), method: :delete, data: { confirm: "Are you sure?" } %>
+      | <%= link_to "Edit", edit_space_path(space), class: "dashboard-link" %>
+      | <%= button_to "Delete", space_path(space), method: :delete, data: { confirm: "Are you sure?" }, class: "dashboard-button" %>
       <% end %>
       <% unless current_user.joined_spaces.include?(space) %>
-      | <%= button_to "Join", join_space_path(space), method: :post %>
+      | <%= button_to "Join", join_space_path(space), method: :post, class: "dashboard-button" %>
       <% else %>
-      | Joined
+      | <span class="dashboard-joined-label">Joined</span>
       <% end %>
     </td>
   </tr>
   <% end %>
 </table>
 <% else %>
-<p>No spaces have been created yet in your organization.</p>
+<p class="dashboard-empty-message">No spaces have been created yet in your organization.</p>
 <% end %>
 <% else %>
-<p>Your account is inactive. Please contact your admin.</p>
+<p class="dashboard-inactive-message">Your account is inactive. Please contact your admin.</p>
 <% end %>

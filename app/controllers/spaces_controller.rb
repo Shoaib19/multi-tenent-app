@@ -6,15 +6,14 @@ class SpacesController < ApplicationController
   def index
     authorize Space
     @spaces = policy_scope(Space)
-    # @spaces = current_user.organization.spaces
   end
 
   def show
   end
 
   def new
-    authorize Space
     @space = current_user.organization.spaces.new
+    authorize @space
   end
 
   def create
