@@ -25,7 +25,7 @@ class UsersController < ApplicationController
 
     if @user.save
       if @user.requires_parental_consent?
-        ParentalConsent.create!(user: @user, status: "pending")
+        ParentalConsent.create!(user: @user, status: "pending", consent_type: "account")
       end
 
       @user.update(is_active: true) if @user.age_group.name == "Adult"

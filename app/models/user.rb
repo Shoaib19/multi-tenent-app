@@ -10,7 +10,7 @@ class User < ApplicationRecord
   has_many :memberships, dependent: :destroy
   has_many :joined_spaces, through: :memberships, source: :space
 
-  has_one :parental_consent, dependent: :destroy
+  has_many :parental_consents, dependent: :destroy
 
   enum :role, {
     default_user: 0,
@@ -29,11 +29,15 @@ class User < ApplicationRecord
   end
 
   def accepted_account_consent?
-    parental_consents.account.accepted.exists?
+    parental_consents.where(consent_type: 0, status: :accepted).exists?
   end
 
   def pending_account_consent?
-    parental_consents.account.pending.exists?
+    parental_consents.where(consent_type: 0, status: :pending).exists?
+  end
+
+  def rejected_account_consent?
+    parental_consents.where(consent_type: 0, status: :rejected).exists?
   end
 
   def accepted_space_consent_for?(space)
@@ -42,6 +46,10 @@ class User < ApplicationRecord
 
   def pending_space_consent_for?(space)
     parental_consents.where(consent_type: 1, space_id: space.id, status: :pending).exists?
+  end
+
+  def rejected_space_consent_for?(space)
+    parental_consents.where(consent_type: 1, space_id: space.id, status: :rejected).exists?
   end
 
   def parental_consent_accepted?
@@ -66,7 +74,6 @@ class User < ApplicationRecord
   end
 
   def needs_parental_consent_popup?
-    requires_parental_consent? &&
-      (parental_consent.nil? || parental_consent.pending?)
+    requires_parental_consent? && pending_account_consent?
   end
 end
