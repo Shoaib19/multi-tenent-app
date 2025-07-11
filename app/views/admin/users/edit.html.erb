@@ -1,14 +1,19 @@
 <h1>Edit User Role</h1>
 
 <%= form_with model: [:admin, @user], local: true do |f| %>
-  <div>
-    <%= f.label :role %><br>
-    <%= f.select :role, User.roles.keys.map { |r| [r.titleize, r] } %>
-  </div>
+<div>
+  <%= f.label :role %><br>
+  <%= f.select :role, User.roles.keys.reject { |r| r == 'admin' && @user != current_user }  %>
+</div>
 
-  <div>
-    <%= f.submit "Update Role" %>
-  </div>
+<div>
+  <%= f.label :is_active, "Active account" %>
+  <%= f.check_box :is_active %>
+</div>
+
+<div>
+  <%= f.submit "Update Role" %>
+</div>
 <% end %>
 
 <%= link_to "Back to Users", admin_users_path %>

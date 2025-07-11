@@ -1,16 +1,14 @@
-<h1>Welcome to your Dashboard</h1>
-<p>Hello, <%= current_user.email %>!</p>
-<p>Organization: <%= current_user.organization.name %></p>
-
-<h2>All Spaces in Your Organization</h2>
+<h1>All Spaces</h1>
 
 <% if current_user.is_active? %>
-<% if @spaces.any? %>
+<%= link_to "New Space", new_space_path %>
+<% end %>
+
 <table>
   <tr>
     <th>Name</th>
     <th>Description</th>
-    <th>Required Age Group</th>
+    <th>Age Group</th>
     <th>Creator</th>
     <th>Actions</th>
   </tr>
@@ -18,14 +16,15 @@
   <tr>
     <td><%= space.name %></td>
     <td><%= space.description %></td>
-    <td><%= space.required_age_group&.name || "None" %></td>
+    <td><%= space.required_age_group&.name %></td>
     <td><%= space.creator.email %></td>
     <td>
-      <%= link_to "View", space_path(space) %>
+      <%= link_to "Show", space_path(space) %>
       <% if space.creator == current_user %>
       | <%= link_to "Edit", edit_space_path(space) %>
       | <%= link_to "Delete", space_path(space), method: :delete, data: { confirm: "Are you sure?" } %>
       <% end %>
+      |
       <% unless current_user.joined_spaces.include?(space) %>
       | <%= button_to "Join", join_space_path(space), method: :post %>
       <% else %>
@@ -35,9 +34,3 @@
   </tr>
   <% end %>
 </table>
-<% else %>
-<p>No spaces have been created yet in your organization.</p>
-<% end %>
-<% else %>
-<p>Your account is inactive. Please contact your admin.</p>
-<% end %>

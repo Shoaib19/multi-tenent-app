@@ -2,7 +2,7 @@
 class Admin::DashboardController < Admin::BaseController
   def index
   @users = current_user.organization.users
-  @spaces = SpaceOrGroup.where(organization: current_user.organization)
+  @spaces = Space.where(organization: current_user.organization)
 
   # Existing counts
   @user_count = @users.count
