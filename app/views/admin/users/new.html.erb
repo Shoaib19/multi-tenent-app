@@ -1,39 +1,41 @@
-<h1>Create New User</h1>
+<h1 class="admin-new-user-title">Create New User</h1>
 
-<%= form_with model: [:admin, @user], local: true do |f| %>
-<div>
+<%= form_with model: [:admin, @user], local: true, html: { class: "admin-new-user-form" } do |f| %>
+<div class="admin-new-user-field">
   <%= f.label :email %><br>
-  <%= f.email_field :email %>
+  <%= f.email_field :email, class: "admin-new-user-input" %>
 </div>
 
-<div>
+<div class="admin-new-user-field">
   <%= f.label :password %><br>
-  <%= f.password_field :password %>
+  <%= f.password_field :password, class: "admin-new-user-input" %>
 </div>
 
-<div>
+<div class="admin-new-user-field">
   <%= f.label :password_confirmation %><br>
-  <%= f.password_field :password_confirmation %>
+  <%= f.password_field :password_confirmation, class: "admin-new-user-input" %>
 </div>
 
-<div>
+<div class="admin-new-user-field">
   <%= f.label :date_of_birth %><br>
-  <%= f.date_field :date_of_birth %>
+  <%= f.date_field :date_of_birth, class: "admin-new-user-input" %>
 </div>
 
-<div>
+<div class="admin-new-user-field">
   <%= f.label :role %><br>
-  <%= f.select :role, User.roles.keys.reject { |r| r == 'admin' && @user != current_user } %>
+  <%= f.select :role, User.roles.keys.reject { |r| r == 'admin' && @user != current_user }, {}, class: "admin-new-user-input" %>
 </div>
 
-<div>
+<div class="admin-new-user-field">
   <%= f.label :is_active, "Active account" %>
-  <%= f.check_box :is_active %>
+  <%= f.check_box :is_active, class: "admin-new-user-checkbox" %>
 </div>
 
-<div>
-  <%= f.submit "Create User" %>
+<div class="admin-new-user-actions">
+  <%= f.submit "Create User", class: "admin-new-user-submit" %>
 </div>
 <% end %>
 
-<%= link_to "Back to Users", admin_users_path %>
+<p class="admin-new-user-back">
+  <%= link_to "← Back to Users", admin_users_path, class: "admin-new-user-back-link" %>
+</p>

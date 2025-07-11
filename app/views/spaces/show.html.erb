@@ -1,4 +1,9 @@
-<h1><%= @space.name %></h1>
-<p><%= @space.description %></p>
-<p>Required Age Group: <%= @space.required_age_group&.name || "None" %></p>
-<p>Creator: <%= @space.creator.email %></p>
+<div class="space-show-container">
+  <h1 class="space-show-title"><%= @space.name %></h1>
+
+  <div class="space-show-detail">
+    <p class="space-show-description"><%= @space.description %></p>
+    <p class="space-show-info">Required Age Group: <strong><%= @space.required_age_group&.name || "None" %></strong></p>
+    <p class="space-show-info">Creator: <strong><%= @space.creator.email %></strong></p>
+  </div>
+</div>

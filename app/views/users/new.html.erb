@@ -1,34 +1,40 @@
-<h1>Sign Up</h1>
+<div class="auth-container">
+  <div class="auth-card">
+    <h2 class="auth-title">Sign Up</h2>
 
-<%= form_with model: @user, url: signup_path, local: true do |f| %>
-<div>
-  <%= f.label :email %><br>
-  <%= f.email_field :email %>
+    <%= form_with model: @user, url: signup_path, local: true do |f| %>
+    <div class="form-group">
+      <%= f.label :email %>
+      <%= f.email_field :email, class: "form-control", required: true %>
+    </div>
+
+    <div class="form-group">
+      <%= f.label :password %>
+      <%= f.password_field :password, class: "form-control", required: true %>
+    </div>
+
+    <div class="form-group">
+      <%= f.label :password_confirmation %>
+      <%= f.password_field :password_confirmation, class: "form-control", required: true %>
+    </div>
+
+    <div class="form-group">
+      <%= f.label :date_of_birth %>
+      <%= f.date_field :date_of_birth, class: "form-control", required: true %>
+    </div>
+
+    <div class="form-group">
+      <%= f.label :organization_id, "Organization ID" %>
+      <%= f.number_field :organization_id, class: "form-control", required: true %>
+    </div>
+
+    <div class="form-actions">
+      <%= f.submit "Sign Up", class: "btn-primary" %>
+    </div>
+    <% end %>
+
+    <div class="auth-footer">
+      <p>Already have an account? <%= link_to "Login", login_path %></p>
+    </div>
+  </div>
 </div>
-
-<div>
-  <%= f.label :password %><br>
-  <%= f.password_field :password %>
-</div>
-
-<div>
-  <%= f.label :password_confirmation %><br>
-  <%= f.password_field :password_confirmation %>
-</div>
-
-<div>
-  <%= f.label :date_of_birth %><br>
-  <%= f.date_field :date_of_birth %>
-</div>
-
-<div>
-  <%= f.label :organization_id, "Organization ID" %><br>
-  <%= f.number_field :organization_id %>
-</div>
-
-<div>
-  <%= f.submit "Sign Up" %>
-</div>
-<% end %>
-
-<%= link_to "Login", login_path %>

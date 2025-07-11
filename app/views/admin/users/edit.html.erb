@@ -1,19 +1,21 @@
-<h1>Edit User Role</h1>
+<h1 class="admin-edit-user-title">Edit User Role</h1>
 
-<%= form_with model: [:admin, @user], local: true do |f| %>
-<div>
+<%= form_with model: [:admin, @user], local: true, html: { class: "admin-edit-user-form" } do |f| %>
+<div class="admin-edit-user-field">
   <%= f.label :role %><br>
-  <%= f.select :role, User.roles.keys.reject { |r| r == 'admin' && @user != current_user }  %>
+  <%= f.select :role, User.roles.keys.reject { |r| r == 'admin' && @user != current_user }, {}, class: "admin-edit-user-input" %>
 </div>
 
-<div>
+<div class="admin-edit-user-field">
   <%= f.label :is_active, "Active account" %>
-  <%= f.check_box :is_active %>
+  <%= f.check_box :is_active, class: "admin-edit-user-checkbox" %>
 </div>
 
-<div>
-  <%= f.submit "Update Role" %>
+<div class="admin-edit-user-actions">
+  <%= f.submit "Update Role", class: "admin-edit-user-submit" %>
 </div>
 <% end %>
 
-<%= link_to "Back to Users", admin_users_path %>
+<p class="admin-edit-user-back">
+  <%= link_to "← Back to Users", admin_users_path, class: "admin-edit-user-back-link" %>
+</p>
