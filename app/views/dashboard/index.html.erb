@@ -2,7 +2,16 @@
 <p>Hello, <%= current_user.email %>!</p>
 <p>Organization: <%= current_user.organization.name %></p>
 
+<% if current_user&.needs_parental_consent_popup? %>
+<%= render 'shared/parental_consent_popup', consent_type: 0 %>
+<% end %>
+
+<% current_user.parental_consents.pending.space_join.each do |consent| %>
+<%= render "shared/parental_consent_popup", consent_type: 1, space_id: consent.space_id %>
+<% end %>
 <h2>All Spaces in Your Organization</h2>
+
+
 
 <% if current_user.is_active? %>
 <% if @spaces.any? %>
@@ -24,7 +33,7 @@
       <%= link_to "View", space_path(space) %>
       <% if space.creator == current_user %>
       | <%= link_to "Edit", edit_space_path(space) %>
-      | <%= link_to "Delete", space_path(space), method: :delete, data: { confirm: "Are you sure?" } %>
+      | <%= button_to "Delete", space_path(space), method: :delete, data: { confirm: "Are you sure?" } %>
       <% end %>
       <% unless current_user.joined_spaces.include?(space) %>
       | <%= button_to "Join", join_space_path(space), method: :post %>

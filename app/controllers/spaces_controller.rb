@@ -1,7 +1,7 @@
 class SpacesController < ApplicationController
   before_action :require_login
   before_action :set_space, only: [ :show, :edit, :update, :destroy, :join ]
-  before_action :authorize_space, only: [ :show, :edit, :update, :destroy, :join ]
+  before_action :authorize_space, only: [ :show, :edit, :update, :destroy ]
 
   def index
     authorize Space
@@ -64,7 +64,7 @@ class SpacesController < ApplicationController
   end
 
   def join
-    authorize @space, :join?
+    @space = Space.find(params[:id])
 
     if !current_user.is_active?
       flash[:alert] = "Your account is inactive. Please contact your admin."
@@ -76,30 +76,76 @@ class SpacesController < ApplicationController
       redirect_to spaces_path and return
     end
 
-    if policy(@space).join?
+    user_age_group = current_user.age_group
+    required_age_group = @space.required_age_group
+
+    if required_age_group.nil? || user_age_group.nil?
       Membership.create!(user: current_user, space: @space)
-      flash[:notice] = "You have joined the space."
-    else
-      if current_user.pending_space_consent_for?(@space)
-        flash[:alert] = "Your parental consent request for this space is pending."
-      else
-        ParentalConsent.create!(
-          user: current_user,
-          space: @space,
-          consent_type: :space_join,
-          status: :pending
-        )
-        flash[:alert] = "Parental consent is required. We've recorded your request."
-      end
+      flash[:notice] = "You joined the space successfully."
+      redirect_to dashboard_path and return
     end
-    redirect_to spaces_path
+
+    case user_age_group.name
+    when 'Adult'
+      Membership.create!(user: current_user, space: @space)
+      flash[:notice] = "You joined the space successfully."
+      redirect_to dashboard_path and return
+    when 'Teen'
+      case required_age_group.name
+      when 'Child', 'Teen'
+        Membership.create!(user: current_user, space: @space)
+        flash[:notice] = "You joined the space successfully."
+        redirect_to dashboard_path and return
+      when 'Adult'
+        handle_space_consent_request
+      else
+        flash[:alert] = "You cannot join this space."
+        redirect_to dashboard_path
+      end
+    when 'Child'
+      case required_age_group.name
+      when 'Child'
+        Membership.create!(user: current_user, space: @space)
+        flash[:notice] = "You joined the space successfully."
+        redirect_to dashboard_path and return
+      when 'Teen'
+        handle_space_consent_request
+      else
+        flash[:alert] = "You cannot join this space."
+        redirect_to dashboard_path
+      end
+
+    else
+      flash[:alert] = "Invalid age group."
+      redirect_to dashboard_path
+    end
   end
+
 
 
   private
 
   def authorize_space
     authorize @space
+  end
+
+  def handle_space_consent_request
+    consent = current_user.parental_consents.find_or_initialize_by(
+      consent_type: :space_join,
+      space: @space
+    )
+    if consent.new_record?
+      consent.status = :pending
+      consent.responded_at = nil
+      consent.consent_type = :space_join
+      consent.save!
+
+      flash[:notice] = "Parental consent request submitted. Await approval."
+    else
+      flash[:alert] = "Your parental consent is #{consent.status}."
+    end
+
+    redirect_to dashboard_path
   end
 
   def set_space

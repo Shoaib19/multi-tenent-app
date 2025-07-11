@@ -1,9 +1,18 @@
 <div id="parentalConsentModal" class="modal" style="display:block; background: rgba(0,0,0,0.5); position:fixed; top:0; left:0; right:0; bottom:0;">
-  <div class="modal-content" style="background:white; padding:2em; margin:10% auto; max-width:400px; border-radius:4px;">
+  <div class="modal-content" style="background:white; padding:2em; margin:10% auto; max-width:400px; border-radius:4px; position:relative;">
+
+
+    <button onclick="document.getElementById('parentalConsentModal').style.display='none'" style="position:absolute; top:10px; right:10px; background:transparent; border:none; font-size:20px; cursor:pointer;">&times;</button>
+
     <h2>Parental Consent Required</h2>
     <p>For your age group, we need parental consent. Please enter a parent/guardian email and choose Accept or Reject.</p>
 
     <%= form_with url: create_or_update_parental_consent_path, method: :post, local: true do |f| %>
+
+    <%= hidden_field_tag :consent_type, consent_type %>
+    <% if consent_type == 1 %>
+    <%= hidden_field_tag :space_id, space_id %>
+    <% end %>
     <div>
       <%= label_tag :parent_email, "Parent Email" %>
       <%= text_field_tag :parent_email, nil, required: true %>
@@ -16,6 +25,12 @@
     <% end %>
 
     <%= form_with url: create_or_update_parental_consent_path, method: :post, local: true do |f| %>
+
+    <%= hidden_field_tag :consent_type, consent_type %>
+    <% if consent_type == 1 %>
+    <%= hidden_field_tag :space_id, space_id %>
+    <% end %>
+
     <div>
       <%= hidden_field_tag :decision, 'rejected' %>
       <%= hidden_field_tag :parent_email, "" %>

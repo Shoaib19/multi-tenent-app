@@ -49,7 +49,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_11_073455) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "parent_email"
-    t.string "consent_type"
+    t.integer "consent_type"
     t.uuid "space_id"
     t.index ["space_id"], name: "index_parental_consents_on_space_id"
     t.index ["user_id"], name: "index_parental_consents_on_user_id"
