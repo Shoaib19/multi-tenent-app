@@ -1,4 +1,4 @@
-<h1>🏛️ Multi Tenent Spaces App</h1>
+<h1>🏛️ Multi Tenant Spaces App</h1>
 
 <p>
   A web platform for <strong>organizations</strong> to manage online spaces with robust <strong>age verification</strong> and <strong>parental consent</strong> features.
